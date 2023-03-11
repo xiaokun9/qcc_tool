@@ -1,0 +1,138 @@
+# Production test setup file for use by the Qualcomm CdaProdTestCmd application.
+
+# The type of device under test, either "CDA-PCB", "CDA-DTS" or "CHARGER-PCB", where:
+# "CDA-PCB" is a Qualcomm CDA IC based device Bluetooth device (e.g. earbud), controlled via a debug interface.
+# "CDA-DTS" is a Qualcomm CDA IC based device Bluetooth device (e.g. earbud), controlled via DTS (BT SPP).
+# "CHARGER-PCB" is a charger PCB running Qualcomm firmware.
+DutType = CHARGER-PCB
+
+# The required length of the DUT serial number (characters).
+# If unspecified, the length is not checked (any non-zero length allowed), but if set to >0, the SN provided will be
+# checked against the given length.
+# Note that this value is used for an initial check of the serial number. If the value passes this check, it may still
+# cause an error if the specific DUT type has a conflicting requirement.
+SerNumLen =
+
+# The required format of the DUT serial number, where valid values are:
+#   "dec" (decimal, e.g. "1234"),
+#   "hex" (hexadecimal, e.g. "12DE", no prefix allowed),
+#   "alnum" (alphanumeric, e.g. "EBS120"),
+# If not specified, the required format defaults to decimal.
+# Note that this value is used for an initial check of the serial number. If the value passes this check, it may still
+# cause an error if the specific DUT type has a conflicting requirement.
+SerNumFormat = dec
+
+# Tests are a comma-separated list of tests to run (in the order specified).
+# The possible tests are: CHG:SET-SN,CHG:LED,CHG:VBATT,CHG:VBUS,CHG:CUR-SENSE,CHG:LID-SENSOR,CHG:BUD-COMMS,
+#                         CHG:BATT-DIS,CHG:BATT-CHARGE,CHG:STANDBY,CHG:THERM,CHG:CHECK-SN,CHG:SET-SHIPMODE,CHG:CFG-SET,
+#                         CHG:BC-TXRX
+Tests = CHG:SET-SN,CHG:CFG-SET,CHG:BC-TXRX,CHG:LED,CHG:VBATT,CHG:VBUS,CHG:CUR-SENSE,CHG:LID-SENSOR,CHG:BUD-COMMS,CHG:BATT-DIS,CHG:BATT-CHARGE,CHG:STANDBY,CHG:THERM
+
+# The path of the tool to call to perform the firmware image burn.
+# Can be blank if firmware burn is not required.
+# E.g "C:\Program Files (x86)\STMicroelectronics\STM32 ST-LINK Utility\ST-LINK Utility\ST-LINK_CLI.exe"
+FwBurnTool = C:\Program Files (x86)\STMicroelectronics\STM32 ST-LINK Utility\ST-LINK Utility\ST-LINK_CLI.exe
+
+# The command-line arguments to pass to the firmware image burning tool specified by FwBurnTool.
+# Can be blank if FwBurnTool is also blank (firmware burn not required).
+# Comma-separated list of arguments to pass.
+# E.g "-c,SWD,UR,-ME,-P,C:\Temp\RDP_911_Charger\CB.srec,-V,-Q,-HardRst"
+FwBurnArgs = -c,SWD,UR,-ME,-P,C:\Temp\RDP_911_Charger\CB.srec,-V,-Q,-HardRst
+
+# Exit codes for the tool specified by the FwBurnCmd setting which indicate
+# that the firmware burn was successful. A comma-separated list of values
+# in the case where there is more than one possible success exit code.
+# Can be blank if FwBurnTool is also blank (firmware burn not required).
+FwBurnPassExitCodes = 0
+
+# If the firmware burn does not automatically cause the charger DUT to reset and run the
+# burned firmware, setting this to 1 causes a user prompt to manually reset the device.
+# If this is not required, it should be set to 0.
+FwBurnManualReset = 0
+
+# The transport connection string, e.g.:
+# "SPITRANS=USBDBG SPIPORT=1" for an earbud device, or
+# "COM5" for a charger device using a COM port (UART) transport.
+# Note that for earbud devices, if only one device is connected, this can be left blank.
+# For charger devices, see the note regarding USB serial port enumeration in the README file.
+Transport = COM5
+
+# The UART baud rate to use (for COM ports).
+UartBaudRate = 115200
+
+# If set to 1, an ID read is not performed, if 0, the ID is read from the DUT and shown.
+# NOTE: If an ID read is not performed, tests reliant on newer DUT features may fail as
+# determining feature support requires DUT identification.
+NoIdRead = 0
+
+# If set to 1, output to the console is reduced to essential information, if 0, all output is shown.
+QuietOutput = 0
+
+# Path to directory where log files will be written
+LogFileDir = C:\temp\CdaProdTestCmdLogs
+
+# Set to 1 if tests should stop after the first failure, 0 to continue and attempt all tests.
+StopOnFail = 1
+
+# LED modes to test (used by CHG:LED test), a comma-separated list, which can include any of:
+# RED, GREEN, AMBER, BLUE, MAGENTA, CYAN, WHITE, OFF.
+# E.g. "RED,GREEN,BLUE,OFF".
+ChgrLedModes = RED,GREEN,BLUE,OFF
+
+# Voltage (in milli-volts) to use for the CHG:VBATT test.
+VbattTestMv = 3600
+
+# Margin, in milli-volts to allow for the VBATT ADC reads (used by the CHG:VBATT test).
+VbattTestMarginMv = 50
+
+# For the CHG:VBATT test: if set to 1, the user will be asked to set the VBAT voltage. If set to 0, the user is not
+# asked to do this (the voltage is assumed to be present, i.e. the battery is connected).
+VbattTestUserSet = 1
+
+# Specifies the VBUS test data (used by CHG:VBUS) to test one or more modes, in the format:
+# <test>,<test>,...<test>, where a test is in the format:
+# <level>:<low_limit>:<high_limit> where:
+# level is a string specifying the regulator level, one of: "OFF", "RESET", "LOW", "HIGH", or "CCOM".
+#   NOTE: Regulator level support is device dependent.
+# low_limit specifies the lower pass limit for the VBUS voltage in mV.
+# high_limit specifies the upper pass limit for the VBUS voltage in mV.
+# For example "OFF:0:100, RESET:400:600, LOW:3900:4100, HIGH:4900:5100".
+# A space following the comma separator is optional.
+VbusTests = OFF:0:100, CCOM:1700:1900, LOW:4300:4500, HIGH:4900:5100
+
+# Current sense ADC range which will result in a pass (used by the CHG:CUR-SENSE test).
+# Comma-separated list of two values: <low_limit>,<high_limit>.
+CurSenseRange = 150,250
+
+# Battery discharge current range (mA) which the user will be asked to check for (used by the CHG:BATT-DIS test).
+# Comma-separated list of two values: <low_limit>,<high_limit>.
+BattDischargeRangeMa = 400,545
+
+# Specifies the battery charging test data (used by CHG:BATT-CHARGE) to test one or more charging modes, in the format:
+# <test>,<test>,...<test>, where a test is in the format:
+# <mode>:<low_limit>:<high_limit> where:
+# mode is a string specifying the charging mode, one of: "100MA", "500MA", "ILIM", or "STANDBY".
+# low_limit specifies the lower pass limit for the charging current in mA.
+# high_limit specifies the upper pass limit for the charging current in mA.
+# For example "500MA:300:500, 100MA:60:100, ILIM:400:545, STANDBY:0:30".
+# A space following the comma separator is optional.
+BattChargeTests = 500MA:300:500, 100MA:60:100, ILIM:400:545, STANDBY:0:30
+
+# Standby current range (uA) which the user will be asked to check for (used by the CHG:STANDBY test).
+# Comma-separated list of two values: <low_limit>,<high_limit>.
+StandbyRangeUa = 40,100
+
+# Thermistor potential divider voltage range (mV) which the user will be asked to check for (used by the CHG:THERM
+# test).
+# Comma-separated list of two values: <low_limit>,<high_limit>.
+ThermistorRangeMv = 1200,1800
+
+# List of configuration settings to write into the device (used by CHG:CFG-SET).
+# The format of the list is <setting>,...,<setting>.
+# The format for a setting is: <name>=<value>.
+# For example: "ID=2018783,<setting>" (The ID setting specifies the board type ID as an integer).
+# A space following the comma separator is optional.
+CfgSetItems = ID=2018783
+
+# Set to 1 to log the earbud Bluetooth device addresses in the CHG:SET-SHIPMODE test, 0 to skip this step.
+ShipModeLogBdAddrs = 1

@@ -1,0 +1,9 @@
+Copyright (c) 2021 Qualcomm Technologies International, Ltd.
+All Rights Reserved.
+Qualcomm Technologies International, Ltd. Confidential and Proprietary.
+
+
+
+Micron MT25QU128ABA
+Micron MT25QU256ABA
+Micron MT25QU512ABB

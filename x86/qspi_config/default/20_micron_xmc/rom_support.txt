@@ -1,0 +1,15 @@
+Copyright (c) 2021 Qualcomm Technologies International, Ltd.
+All Rights Reserved.
+Qualcomm Technologies International, Ltd. Confidential and Proprietary.
+
+
+
+MT25QU128ABA
+MT25QU256ABA
+MT25QU512ABB
+XM25QU32C
+XM25QU64A
+XM25QU64C
+XM25QU128C
+XM25QU256B
+XM25QU256C

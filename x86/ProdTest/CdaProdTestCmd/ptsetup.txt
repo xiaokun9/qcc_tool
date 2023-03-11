@@ -1,0 +1,228 @@
+# Production test setup file for use by the Qualcomm CdaProdTestCmd application.
+
+# The type of device under test, either "CDA-PCB", "CDA-DTS" or "CHARGER-PCB", where:
+#   "CDA-PCB" is a Qualcomm CDA IC based device Bluetooth device (e.g. earbud), controlled via a debug interface.
+#   "CDA-DTS" is a Qualcomm CDA IC based device Bluetooth device (e.g. earbud), controlled via DTS (BT SPP).
+#   "CHARGER-PCB" is a charger PCB running Qualcomm firmware.
+DutType = CDA-PCB
+
+# The required length of the DUT serial number (characters).
+# If unspecified, the length is not checked (any non-zero length allowed), but if set to >0, the SN provided will be
+# checked against the given length.
+# Note that this value is used for an initial check of the serial number. If the value passes this check, it may still
+# cause an error if the specific DUT type has a conflicting requirement.
+SerNumLen =
+
+# The required format of the DUT serial number, where valid values are:
+#   "dec" (decimal, e.g. "1234"),
+#   "hex" (hexadecimal, e.g. "12DE", no prefix allowed),
+#   "alnum" (alphanumeric, e.g. "EBS120"),
+# If not specified, the required format defaults to decimal.
+# Note that this value is used for an initial check of the serial number. If the value passes this check, it may still
+# cause an error if the specific DUT type has a conflicting requirement.
+SerNumFormat = dec
+
+# Tests are a comma-separated list of tests to run (in the order specified).
+# The possible tests are: SET-PTMODE,SET-SN,LEDS,BUTTONS,I2C-DEVS,I2C-TOUCH,CHARGER,AUDIO-TONE,AUDIO-LOOP,XTAL-TRIM,
+#                         RF-POWER,SET-BDADDR,SET-BDNAME,CFG-MERGE,CHECK-SN,USER-HC
+Tests = SET-PTMODE,SET-SN,LEDS,BUTTONS,I2C-DEVS,CHARGER,AUDIO-TONE,AUDIO-LOOP,XTAL-TRIM,RF-POWER,SET-BDNAME,SET-BDADDR
+
+# Path to the firmware image file to be burned to the DUT before starting tests.
+# E.g. "C:\temp\flash_image.xuv".
+# Optional setting, can be removed or left blank if firmware burn is not required.
+FwPath =
+
+# The number of milliseconds to wait after a DUT reset before attempting to open a new connection, e.g. after firmware
+# has been burned to the DUT.
+DutResetWaitMs = 5000
+
+# If set to 1, the DUT will be reset after testing completes, if 0, not reset.
+DutResetOnClose = 1
+
+# ConfigDb is the path to a QTIL database file (*.sdb) suitable for the DUT, with an optional system version label
+# appended, e.g. "C:\<dut_code_location>\hyd.sdb", or "C:\<dut_code_location>\hyd.sdb:QCC514X_CONFIG".
+ConfigDb = C:\qtil\QCC514x_QCC304x.SRC.1.0_AP44\QCC514x_QCC304x.SRC.1.0\adk\bin\qcc514x_qcc304x\hydracore_config.sdb
+
+# The configuration layer (6-15) to use when writing configuration settings.
+# Note that a value written at a higher layer overrides any values set for that key at lower layers.
+# Note that this setting is not used when configuration settings are written by the CFG-MERGE test,
+# as the layer is specified in the *.htf file used.
+ConfigWriteLayer = 15
+
+# The transport connection string, e.g.:
+#   "SPITRANS=USBDBG SPIPORT=1" for an earbud device, or
+#   "COM5" for a charger device using a COM port (UART) transport.
+# Note that for earbud devices, if only one device is connected, this can be left blank.
+# For charger devices, see the note regarding USB serial port enumeration in the README file.
+Transport = SPITRANS=USBDBG SPIPORT=1
+
+# The Bluetooth device name to write to the DUT (SET-BDNAME).
+# This can be left blank if the device name isn't to be written.
+DeviceName = Steves
+
+# The spectrum analyser to use for XTAL-TRIM and RF-POWER tests.
+# Can be "Q-REFEP" (Reference Endpoint), or one of: "AG-ESA" / "AG-N4010A" / "AN-MT8852B" if a GPIB/VISA implementation
+# is provided.
+# Can be left blank if the XTAL-TRIM isn't specified.
+# If left blank, the RF-POWER test will ask the user to check the output.
+SpectrumAnalyser = Q-REFEP
+
+# Spectrum analyser port ID.
+# For a Q-REREP (reference endpoint, this is the USB identifier, e.g. "\\.\csr0".
+# For test equipment connected by GPIB, this would be the GPIB primary address, e.g. "15".
+# If the spectrum analyser is not used, this can be blank.
+SpecAnPortId = \\.\csr0
+
+# The Bluetooth RF channel to use for XTAL-TRIM and RF-POWER tests.
+RfTestChannel = 39
+
+# The expected output power of the DUT in dBm, used for the RF-POWER test.
+ExpectedPowerDbm = -65.0
+
+# The margin used with ExpectedPowerDbm to determine test pass limits, used for the RF-POWER test.
+PowerMarginDbm = 5.0
+
+# The coarse frequency offset margin in Hertz defining the target offset window used during XTAL-TRIM.
+XtalCoarseMarginHz = 5000
+
+# The fine frequency offset margin in Hertz defining the target offset window used during XTAL-TRIM.
+XtalFineMarginHz = 2500
+
+# If set to 0, a binary chop search algorithm is used for XTAL-TRIM. If set to 1, an incremental search is used.
+XtalTrimIncremental = 0
+
+# If set to 1, the on DUT application will be disabled before tests start, if 0, not disabled.
+DisableDutApp = 1
+
+# DUT PSKEY ID used for controlling production test mode (used by SET-PTMODE). 
+ProdTestPsKey = 653
+
+# List of LED tests to run (used by LEDS test).
+# The format of the list is <led>,...,<led>, where the format of each led item is:
+#   <pio>:<on_state>:<description>:<first_state>.
+# <pio> is the PIO number used for the LED.
+# <on_state> indicates whether the PIO being high (1) or low (0) switches on the LED.
+# <description> provides the user with the name of the LED being tested.
+# <first_state> indicates whether to test the LED off state (0) or on state (1) first.
+# E.g. for two LEDs: "66:0:Green:1,67:0:Red:1".
+Leds = 66:0:Green:1
+
+# List of button tests to run (used by BUTTONS test).
+# The format of the list is <button>,...,<button>, where the format of each button item is:
+#   <pio>:<on_state>:<description><first_state>.
+# <pio> is the PIO number used for the button or other on/off input device.
+# <on_state> whether the PIO is expected to be high (1) or low (0) when the button is pressed.
+# <description> provides the user with the name of the button or similar on/off input to operate.
+# <first_state> indicates whether to test the unpressed state (0) or pressed state (1) first.
+# E.g. for two buttons: "0:1:Up button:1,1:1:Down button:1".
+Buttons = 0:1:Multi-function:1
+
+# Path to a file containing the range of Bluetooth device addresses to write to devices
+BdAddrFile =
+
+# Increment to apply to the LAP part of the next Bluetooth address when using a Bluetooth address file (BdAddrFile
+# setting).
+BdAddrIncrement = 1
+
+# Path to a file to contain the record of Bluetooth addresses written (device serial number to address mapping)
+BdAddrRecordFile = C:\temp\BdAddrRecord.txt
+
+# Path to a *.htf configuration file containing configuration settings to merge into the device (used by CFG-MERGE).
+# This setting can be empty, but if the CFG-MERGE test is run with both this and the CfgMergePs setting empty, an
+# error will occur.
+CfgMergeMibFile =
+
+# List of PS store configuration settings to merge into the device (used by CFG-MERGE).
+# The format of the list is <setting>,...,<setting>. PS store keys are either apps or audio settings.
+#   For audio keys the format for a setting is: audio:<id>=[<value>].
+#   For apps keys the format for a setting is: apps:<name|id>=[<value>].
+#   For all key types the format of the value is: [val0Lsb val0Msb val1Lsb val1Msb ...]
+# For example, for one of each key type: "apps:USR3=[01 00],audio:0x000080=[01 10 01 00 01 00 07 F8 E4 01]".
+# If no value is specified, e.g. "apps:USR3=", the key is effectively deleted.
+# id values can be specified as 0x prefixed hex, or as decimal.
+# Value octets must be hex (0x prefix optional).
+# Note that other than the "apps:" or "audio:" prefix, the format is the same as produced when dumping the PS store
+# keys to file using ConfigCmd's "dev2txt" operation, with the "-storeset" argument set to either "user_ps_apps" or
+# "user_ps_audio".
+# Valid apps PS key ranges can be found in the ps_if.h file included in ChipCode packages.
+# This setting can be empty, but if the CFG-MERGE test is run with both this and the CfgMergeMibFile setting empty, an
+# error will occur.
+CfgMergePs =
+
+# Specifies the I2C bus configurations in the format:
+# <bus_cfg>,<bus_cfg>,...<bus_cfg>, where a bus_cfg is in the format:
+#   <pio_scl>:<pio_sda>:<clock_khz> where:
+# <pio_scl> is the PIO used for I2C SCL (clock).
+# <pio_sda> is the PIO used for I2C SDA (data).
+# <clock_khz> is the I2C clock speed in kHz.
+# For example "18:20:400, 17:19:100".
+# A space following the comma separator is optional.
+I2cBuses = 16:20:100
+
+# Specifies the connectivity test data (used by I2C-DEVS) to test one or more I2C devices, in the format:
+#   <test>,<test>,...<test>, where a test is in the format:
+#     <desc>:<bus_index>:<dev_addr>:[<write_octets>]:[<expected_response_octets>] where:
+# <desc> is a string describing the test or device being tested, e.g. "prox_sense", or "proximity sensor".
+# <bus_index> is an unsigned decimal value specifying the index (0 based) of the I2C bus the device is attached to. The
+# value must be less than the number of buses specified for the I2cBuses setting.
+# <dev_addr> is a hex octet (no prefix) specifying the I2C address of the device.
+# <write_octets> is a space separated list of between 0 and 32 octets (hex, no prefix) to write.
+# <expected_response_octets> is a space separated list of between 1 and 32 octets (hex, no prefix) expected to be read
+# from the device after writing write_octets.
+# For example "Proximity sensor:0:1E:[7F]:[11], Cap sensor:1:44:[01 00]:[06 00]".
+# A space following the comma separator is optional.
+I2cConnTests = Proximity sensor:0:1E:[7F]:[11],Touchpad:0:44:[00]:[4F 03]
+
+# Specifies the connectivity test data (used by I2C-TOUCH) to test one or more I2C touchpad devices, in the format:
+#   <test>,<test>,...<test>, where a test is in the format:
+#     <desc>:<reset_pio>:<reset_wait_ms>:<bus_index>:<dev_addr>:[<write_octets>]:[<expected_response_octets>] where:
+# <desc> is a string describing the test or device being tested, e.g. "Touchpad L".
+# <reset_pio> is the PIO number used for touchpad reset (decimal, maximum 255).
+# <reset_wait_ms> is the time to wait for the touchpad to reset in milliseconds (decimal, maximum 65535).
+# <bus_index> is an unsigned decimal value specifying the index (0 based) of the I2C bus the device is attached to. The
+# value must be less than the number of buses specified for the I2cBuses setting.
+# <dev_addr> is a hex octet (no prefix) specifying the I2C address of the device.
+# <write_octets> is a space separated list of between 0 and 32 octets (hex, no prefix) to write.
+# <expected_response_octets> is a space separated list of between 1 and 32 octets (hex, no prefix) expected to be read
+# from the device after writing write_octets.
+# For example "Touchpad L:18:1000:0:08:[]:[FF 03 01], Touchpad R:19:1000:0:09:[]:[FF 03 01]".
+# A space following the comma separator is optional.
+I2cTouchTests = Touchpad:18:1000:0:08:[]:[FF 03 01]
+
+# Audio loop tests (used by AUDIO-LOOP test), where the format is <test>,<test>,...<test>, and a test is in the format:
+#   <desc>:<in_device>:<in_iface>:<in_channel>:<in_mic_pio>:<in_mic_en>:<out_device>:<out_iface>:<out_channel>, where:
+# <desc> describes the loop.
+# <in_device> is the input (source) device type.
+# <in_iface> is the input (source) interface.
+# <in_channel> is the input (source) channel.
+# <in_mic_pio> is the PIO used to enable / disable a mic. For digital microphones, the given PIO is always used. For
+# analogue microphones:
+#     0: mic bias enabled, no PIO used.
+#     >0: mic bias not enabled, PIO used.
+# <in_mic_en> is the enable level for the PIO used to enable a mic. 0 = active low, 1 = active high.
+# <out_device> is the output (sink) device type.
+# <out_iface> is the output (sink) interface.
+# <out_channel> is the output (sink) channel.
+# See device file accmd_prim.h for valid device (ACCMD_STREAM_DEVICE), interface (ACCMD_AUDIO_INSTANCE), and channel
+# (ACCMD_AUDIO_CHANNEL) values.
+# E.g. to test 2 analogue and 2 digital mics through 1 speaker:
+# "amic1-spkr:3:0:0:0:0:3:0:0, amic2-spkr:3:0:1:0:0:3:0:0, dmic1-spkr:6:1:0:19:0:3:0:0, dmic2-spkr:6:1:1:19:0:3:0:0".
+AudioLoopTests = amic1-spkr:3:0:0:0:0:3:0:0, amic2-spkr:3:0:1:0:0:3:0:0, dmic1-spkr:6:1:0:19:0:3:0:0, dmic2-spkr:6:1:1:19:0:3:0:0
+
+# List of user defined app driven tests to run (used by USER-HC test).
+# The format of the list is <test>,...,<test>, where the format of each test item is:
+#   <description>:<msg_channel>:[<msg_data>].
+# <description> provides the user with the description of what's being tested or what to check.
+# <msg_channel> Indicates the message channel to use (0-127).
+# <msg_data> Space separated list of between 1 and 80 16-bit values (hex, no prefix) to write.
+# E.g. for two tests: "MIC:1:[0001 0002 0001],RF:1:[0001 0002 0002]".
+UserHcTests = MIC:1:[0001 0002 0001],RF:1:[0001 0002 0002]
+
+# If set to 1, output to the console is reduced to essential information, if 0, all output is shown.
+QuietOutput = 0
+
+# Path to directory where log files will be written
+LogFileDir = C:\temp\CdaProdTestCmdLogs
+
+# Set to 1 if tests should stop after the first failure, 0 to continue and attempt all tests.
+StopOnFail = 1

@@ -1,0 +1,11 @@
+Copyright (c) 2021 Qualcomm Technologies International, Ltd.
+All Rights Reserved.
+Qualcomm Technologies International, Ltd. Confidential and Proprietary.
+
+
+
+IS25WP080D
+IS25WP016D
+IS25WP032D
+IS25WP064A
+IS25WP128F

@@ -1,0 +1,10 @@
+Copyright (c) 2021 Qualcomm Technologies International, Ltd.
+All Rights Reserved.
+Qualcomm Technologies International, Ltd. Confidential and Proprietary.
+
+
+
+MX25U6435F / MX25U6432F
+MX25U12835F / MX25U12832F / MX25U12843G
+MX25U25645G
+MX25U51245G

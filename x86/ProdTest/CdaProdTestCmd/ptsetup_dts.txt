@@ -1,0 +1,166 @@
+# Production test setup file for use by the Qualcomm CdaProdTestCmd application.
+
+# The type of device under test, either "CDA-PCB", "CDA-DTS" or "CHARGER-PCB", where:
+# "CDA-PCB" is a Qualcomm CDA IC based device Bluetooth device (e.g. earbud), controlled via a debug interface.
+# "CDA-DTS" is a Qualcomm CDA IC based device Bluetooth device (e.g. earbud), controlled via DTS (BT SPP).
+# "CHARGER-PCB" is a charger PCB running Qualcomm firmware.
+DutType = CDA-DTS
+
+# The required length of the DUT serial number (characters).
+# If unspecified, the length is not checked (any non-zero length allowed), but if set to >0, the SN provided will be
+# checked against the given length.
+# Note that this value is used for an initial check of the serial number. If the value passes this check, it may still
+# cause an error if the specific DUT type has a conflicting requirement.
+SerNumLen =
+
+# The required format of the DUT serial number, where valid values are:
+#   "dec" (decimal, e.g. "1234"),
+#   "hex" (hexadecimal, e.g. "12DE", no prefix allowed),
+#   "alnum" (alphanumeric, e.g. "EBS120"),
+# If not specified, the required format defaults to decimal.
+# Note that this value is used for an initial check of the serial number. If the value passes this check, it may still
+# cause an error if the specific DUT type has a conflicting requirement.
+SerNumFormat = dec
+
+# Tests are a comma-separated list of tests to run (in the order specified).
+# The possible tests are: DTS:LEDS,DTS:TOUCHPAD,DTS:PROXIMITY,DTS:HALL-SENSOR,DTS:TEMP,DTS:BATT,DTS:AUDIO-TONE,DTS:AUDIO-LOOP,DTS:RSSI,DTS:RF-POWER,DTS:CFG-SET
+Tests = DTS:LEDS,DTS:TOUCHPAD,DTS:PROXIMITY,DTS:HALL-SENSOR,DTS:TEMP,DTS:BATT,DTS:RF-POWER,DTS:AUDIO-TONE,DTS:AUDIO-LOOP
+
+# If set to 1, pre-paired DUTs are allowed. If set to 0, if a DUT is already paired it is treated as an error.
+AllowPrePairedDuts = 0
+
+# Determines whether an inquiry (with display of discovered devices) is performed when DUT pairing fails.
+# Set to 1 to perform the inquiry and see which devices are discovered, or to 0 to skip that step.
+InquiryOnPairingFail = 1
+
+# The approximate timeout in seconds to use for the BT inquiry used to show discovered devices.
+# Note that the resolution of the timeout is in units of 1.28 seconds, therefore the actual timeout used will be the
+# nearest multiple of 1.28 seconds which is at least equal to the given timeout value.
+# The valid range for this value is between 1 and 60.
+BtInquiryTimeoutSeconds = 10
+
+# Device Test Service (DTS) authentication key, which must match the device application DTS key.
+# The key value is a comma-separated list of 16 hex octets (0x prefix optional). For example:
+# "01,23,45,67,89,AB,CD,EF,01,23,45,67,89,AB,CD,EF"
+DtsAuthKey = 01,23,45,67,89,AB,CD,EF,01,23,45,67,89,AB,CD,EF
+
+# If set to 1, Device Test Service (DTS) is disabled after passing all tests.
+# Set to 0 to leave DTS active (not recommended for production line use).
+DisableDtsOnPass = 1
+
+# Path to a file containing the record of Bluetooth addresses written (device serial number to address mapping)
+BdAddrRecordFile = C:\temp\BdAddrRecord.txt
+
+# LEDs to test (used by DTS:LEDS test), where the format is <ID>:<description>,...,<ID>:<description>.
+# The ID value must be between 0 and 7.
+# E.g. for two LEDs: "0:Green,1:Red".
+Leds = 0:Green,1:Red
+
+# Touchpad action types to test (used by DTS:TOUCHPAD test). A comma-separated list of action types.
+# The supported action types are: TOUCH, SWIPE and COVER
+# E.g. to test touch and swipe "SWIPE,TOUCH".
+TouchTests = SWIPE
+
+# The timeout in seconds to use for each touchpad test (used by DTS:TOUCHPAD test).
+# The valid range for this value is between 1 and 60.
+TouchTestTimeoutSeconds = 10
+
+# The timeout in seconds to use for the DTS:PROXIMITY test.
+# The valid range for this value is between 1 and 60.
+ProximityTestTimeoutSeconds = 10
+
+# The timeout in seconds to use for the DTS:HALL-SENSOR test.
+# The valid range for this value is between 1 and 60.
+HallSensorTestTimeoutSeconds = 10
+
+# Temperature test range in degrees C which will result in a pass (used by the DTS:TEMP test).
+# Comma-separated list of two values: <low_limit>,<high_limit>.
+TempTestRangeDegC = 20,30
+
+# Battery test range in milli-volts which will result in a pass (used by the DTS:BATT test).
+# Comma-separated list of two values: <low_limit>,<high_limit>.
+BattTestRangeMv = 3800,4000
+
+# Audio tone tests (used by DTS:AUDIO-TONE test), where the format is <channel>:<tone>,...,<channel>:<tone>, where:
+# channel indicates the channel to play the tone on, where 0 = Channel A (L), 1 = Channel B (R), and
+# 2 = Channels A & B (L & R).
+# tone is a value between 0 and 119 indicating the note to play, where 0 is C0 (low) and 119 is B9 (high) (see device
+# file ringtone_notes.h).
+# E.g. to test L & R separately with a C6 tone: "0:72,1:72".
+AudioToneTests = 0:72
+
+# Audio loop tests (used by DTS:AUDIO-LOOP test), where the format is <test>,<test>,...<test>, and a test is:
+# <desc>:<mic>:<out_hardware>:<out_instance>:<out_channel>, where:
+# <desc> describes the loop.
+# <mic> indicates the microphone number for input (1-n, where n is device dependent).
+# <out_hardware> is the output hardware type.
+# <out_instance> is the output instance.
+# <out_channel> is the output channel.
+# See device file microphones.h for mic IDs.
+# See device file audio_if.h for hardware, instance, and channel values.
+# E.g. to test 4 mics through 1 speaker:
+# "mic1-spkr:1:3:0:0, mic2-spkr:2:3:0:0, mic3-spkr:3:3:0:0, mic4-spkr:4:3:0:0".
+AudioLoopTests = mic1-spkr:1:3:0:0, mic2-spkr:2:3:0:0, mic3-spkr:3:3:0:0, mic4-spkr:4:3:0:0
+
+# RSSI test range in dBm which will result in a pass (used by the DTS:RSSI test).
+# Comma-separated list of two values: <low_limit>,<high_limit>.
+RssiTestRangeDbm = -60,-50
+
+# List of PS store application configuration settings to set (used by DTS:CFG-SET).
+# The format of the list is <setting>,...,<setting>.
+# The format for a setting is: [apps:]<name|id>=[<value>].
+# The "apps:" prefix is optional.
+# The format of the value is: [val0Lsb val0Msb val1Lsb val1Msb ...]
+# For example, "USR3=[01 00],USR5=[47 20 2E 00]".
+# If no value is specified, e.g. "USR3=", the key is effectively deleted.
+# id values can be specified as 0x prefixed hex, or as decimal.
+# Value octets must be hex (0x prefix optional).
+# Note that other than the optional "apps:" prefix, the format is the same as produced when dumping the PS store
+# keys to file using ConfigCmd's "dev2txt" operation, with the "-storeset" argument set to "user_ps_apps".
+# Valid apps PS key ranges can be found in the ps_if.h file included in ChipCode packages.
+CfgSetPs =
+
+# The spectrum analyser to use for the DTS:RF-POWER test.
+# Can be "Q-REFEP" (Reference Endpoint), or one of: "AG-ESA" / "AG-N4010A" / "AN-MT8852B" if a GPIB/VISA implementation
+# is provided.
+# If left blank, the DTS:RF-POWER test will ask the user to check the output.
+SpectrumAnalyser =
+
+# Spectrum analyser port ID.
+# For a Q-REREP (reference endpoint, this is the USB identifier, e.g. "\\.\csr0".
+# For test equipment connected by GPIB, this would be the GPIB primary address, e.g. "15".
+# If the spectrum analyser is not used, this can be blank.
+SpecAnPortId = \\.\csr0
+
+# The Bluetooth RF channel to use for the DTS:RF-POWER test.
+RfTestChannel = 39
+
+# The expected output power of the DUT in dBm, used for the DTS:RF-POWER test.
+ExpectedPowerDbm = -65.0
+
+# The margin used with ExpectedPowerDbm to determine test pass limits, used for the DTS:RF-POWER test.
+PowerMarginDbm = 5.0
+
+# The method used to stop RF test modes, such as used with the DTS:RF-POWER test.
+# The format of this setting is <method>[:<param>][:desc], where:
+# <method> is the method used, which can be either TIME, PIO or TOUCH.
+# <param> is a parameter for the method.
+# For the TIME method, it is the duration in seconds after which the test mode with stop (between 1 and 60).
+# For the PIO method, it is the PIO number for which a state change will stop the test mode.
+# For the TOUCH method, there is no parameter.
+# <desc> is an optional description of a PIO (not used for TIME or TOUCH methods).
+# E.g. "TIME:10", "PIO:0:magnetic sensor", or "TOUCH".
+RfTestStopMethod = TIME:10
+
+# The time in seconds to wait after a reboot before attempting to reconnect with DTS (between 0 and 60).
+# Used with the DTS:RF-POWER test when reconnecting after the RF test mode ends and a reboot occurs.
+DtsDutRebootWaitS = 3
+
+# If set to 1, output to the console is reduced to essential information, if 0, all output is shown.
+QuietOutput = 0
+
+# Path to directory where log files will be written
+LogFileDir = C:\temp\CdaProdTestCmdLogs
+
+# Set to 1 if tests should stop after the first failure, 0 to continue and attempt all tests.
+StopOnFail = 1

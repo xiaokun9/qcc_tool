@@ -1,0 +1,9 @@
+Copyright (c) 2021 Qualcomm Technologies International, Ltd.
+All Rights Reserved.
+Qualcomm Technologies International, Ltd. Confidential and Proprietary.
+
+
+
+S25FS064S
+S25FS128S
+S25FS256S

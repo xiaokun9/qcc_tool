@@ -1,0 +1,10 @@
+Copyright (c) 2021 Qualcomm Technologies International, Ltd.
+All Rights Reserved.
+Qualcomm Technologies International, Ltd. Confidential and Proprietary.
+
+
+
+EN25S80B(2S)
+EN25S16B(2S)
+EN25S32A(2S)
+EN25S64A(2SC)

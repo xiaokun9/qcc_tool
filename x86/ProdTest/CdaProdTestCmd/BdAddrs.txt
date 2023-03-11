@@ -1,0 +1,3 @@
+# The values below need to be updated as appropriate for the product.
+NEXT=00025b0000FF
+LAST=00025b0000FF

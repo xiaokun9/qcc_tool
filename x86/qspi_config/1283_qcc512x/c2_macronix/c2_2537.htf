@@ -1,0 +1,9 @@
+# Copyright (c) 2021 Qualcomm Technologies International, Ltd.
+# All Rights Reserved.
+# Qualcomm Technologies International, Ltd. Confidential and Proprietary.
+
+
+
+# MANUFACTURER: Macronix
+# DEVICE: MX25U6435F / MX25U6432F
+# SUSPEND_CMDS: SiflashSuspendResumeCommands = 0xb030b030

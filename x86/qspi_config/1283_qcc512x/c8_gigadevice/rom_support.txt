@@ -1,0 +1,10 @@
+Copyright (c) 2021 Qualcomm Technologies International, Ltd.
+All Rights Reserved.
+Qualcomm Technologies International, Ltd. Confidential and Proprietary.
+
+
+
+GD25LQ16C / GD25LE16C
+GD25LQ32C / GD25LQ32D / GD25LE32D / GD25LE32E
+GD25LQ64C / GD25LQ64E / GD25LE64C / GD25LE64E
+GD25LQ128D / GD25LQ128E / GD25LE128D / GD25LE128E

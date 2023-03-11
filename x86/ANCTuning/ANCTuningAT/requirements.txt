@@ -1,0 +1,5 @@
+py_mini_sh
+pylint
+devpi-client
+bumpversion
+sphinx
