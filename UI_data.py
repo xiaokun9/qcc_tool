@@ -30,7 +30,10 @@ class ChildUiClass(QMainWindow, Ui_MainWindow):
         self.port_usbTimeout = 1000 #1000ms
         for index in range(count):
             self.port_info[ports_list[index]] = ports_list[index].replace(' ', '').replace('(', '').replace(')', '')
+            self.comboBox_1.addItem(ports_list[index])
+            self.comboBox_2.addItem(ports_list[index])
             if index == 0:
+                self.comboBox_1.setCurrentIndex(0)
                 self.cur_port1 = ports_list[index]
                 port_device = self.port_info[self.cur_port1]
                 parm1 = None
@@ -46,8 +49,7 @@ class ChildUiClass(QMainWindow, Ui_MainWindow):
                 self.cur_port2 = ports_list[index]
             #self.port_info[ports_list[index]] = trans_list[index]
             #print(ports_list[index].replace(' ','').replace('(','').replace(')',''))
-            self.comboBox_1.addItem(ports_list[index])
-            self.comboBox_2.addItem(ports_list[index])
+
         self.comboBox_1.activated.connect(self.port_status_change1)
         self.comboBox_2.activated.connect(self.port_status_change2)
         self.pushButton_1_read.clicked.connect(self.port_read_addr_name_1)
@@ -59,7 +61,7 @@ class ChildUiClass(QMainWindow, Ui_MainWindow):
             #print("closeTestEngine:" + retval)
         self.handle1 = None
         self.port1_open()
-        #print(self.cur_port1)
+        print(self.cur_port1)
     def port_status_change2(self):
         self.cur_port2 = self.comboBox_2.currentText()
         #print(self.cur_port2)
@@ -99,7 +101,7 @@ class ChildUiClass(QMainWindow, Ui_MainWindow):
         else:
             self.statusBar.showMessage("ConfigCacheInit Fail,please retry!!!")
             return
-        print(retval)
+        #print(retval)
 
         retval = self.myDll.teConfigCacheRead(self.handle1, None, 0) #None:read for device
         if retval == self.myDll.TE_OK:
@@ -107,17 +109,26 @@ class ChildUiClass(QMainWindow, Ui_MainWindow):
         else:
             self.statusBar.showMessage("ConfigCacheRead Fail,please retry!!!")
             return
-        print(retval)
+        #print(retval)
         retval, value, maxLen = self.myDll.teConfigCacheReadItem(self.handle1, key='bt2:BD_ADDRESS', maxLen=100)
-        value = value.replace('[','').replace(']','').strip().replace(' ',':')#反转？
-        self.lineEdit_1_BD_addr.setText(value)#bd addr
-        print(retval, value, maxLen)
+        self.addr1_arry = value.replace('[','').replace(']','').strip().split(' ')#array
+        addr1_str = ''
+        for index in range(6):
+            temp = 5 - index
+            addr1_str = addr1_str + self.addr1_arry[temp]
+            if temp == 4:
+                addr1_str += ':'
+            elif temp == 3:
+                addr1_str += ':'
+            #print(addr1_str)
+        self.lineEdit_1_BD_addr.setText(addr1_str)#bd addr
+        #print(retval, value, maxLen)
         retval, value, maxLen = self.myDll.teConfigCacheReadItem(self.handle1, key='app5:DeviceName',maxLen=100)
         value = value.replace('"','')
-        print(retval, value, maxLen)
+        #print(retval, value, maxLen)
         self.lineEdit_1_name.setText(value)#bt name
         #self.myDll.teConfigCacheWrite()
-        print("button")
+        #print("button")
 
 
 

@@ -1,0 +1,26 @@
+Metadata-Version: 2.1
+Name: PyQtdoc
+Version: 5.15.0
+Summary: PyQtdoc installs Qt documentation for PyQt
+Home-page: https://github.com/PierreRaybaut/PyQtdoc
+Author: Pierre Raybaut
+Author-email: pierre.raybaut@gmail.com
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Operating System :: Microsoft :: Windows
+Requires: PyQt5
+Requires: pyqt5_tools
+
+PyQtdoc installs Qt official documentation 
+(.ch files, i.e. Qt assistant format) in PyQt directory.
+
+PyQtdoc version is indexed to Qt version.
+
+PyQtdoc is part of the WinPython distribution project.
+
+Important note
+--------------
+
+    Since Qt5, ``QtAssistant`` cannot register documentation automatically. You must run the ``scripts\pyqtdoc.py`` script (with option `--register`) or register them manually.
+
+
