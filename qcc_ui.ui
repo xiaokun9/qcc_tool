@@ -35,18 +35,18 @@
       <property name="checkable">
        <bool>true</bool>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_4">
+      <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_9">
+        <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
-          <widget class="QLabel" name="label_3">
-           <property name="text">
-            <string>端口</string>
+          <widget class="QComboBox" name="comboBox_1">
+           <property name="minimumSize">
+            <size>
+             <width>130</width>
+             <height>20</height>
+            </size>
            </property>
           </widget>
-         </item>
-         <item>
-          <widget class="QComboBox" name="comboBox_1"/>
          </item>
          <item>
           <widget class="QLabel" name="label_5">
@@ -246,65 +246,37 @@
          </property>
         </widget>
        </item>
-      </layout>
-     </widget>
-    </item>
-    <item>
-     <widget class="QGroupBox" name="groupBox_2">
-      <property name="title">
-       <string>设备2</string>
-      </property>
-      <property name="flat">
-       <bool>false</bool>
-      </property>
-      <property name="checkable">
-       <bool>true</bool>
-      </property>
-      <property name="checked">
-       <bool>false</bool>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_5">
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>
-          <widget class="QLabel" name="label_2">
+          <widget class="QLabel" name="label">
            <property name="text">
-            <string>端口</string>
+            <string>APP PSK ID:</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QComboBox" name="comboBox_2"/>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_4">
-           <property name="text">
-            <string>蓝牙地址</string>
+          <widget class="QComboBox" name="app_psk_id">
+           <property name="minimumSize">
+            <size>
+             <width>80</width>
+             <height>20</height>
+            </size>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_2_BD_addr"/>
+          <widget class="QLineEdit" name="lineEdit_app_psk_value"/>
          </item>
          <item>
-          <widget class="QLabel" name="label_6">
-           <property name="text">
-            <string>蓝牙名称</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="lineEdit_2_name"/>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_2_read">
+          <widget class="QPushButton" name="pushButton_app_psk_read">
            <property name="text">
             <string>读取</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_2_write">
+          <widget class="QPushButton" name="pushButton_app_psk_write">
            <property name="text">
             <string>写入</string>
            </property>
@@ -313,166 +285,42 @@
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_6">
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
          <item>
-          <widget class="QCheckBox" name="checkBox_2">
+          <widget class="QLabel" name="label_2">
            <property name="text">
-            <string>live log</string>
+            <string>Audio PSK ID:</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_14">
-           <property name="text">
-            <string>开盒</string>
+          <widget class="QComboBox" name="audio_psk_id">
+           <property name="minimumSize">
+            <size>
+             <width>80</width>
+             <height>20</height>
+            </size>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_18">
+          <widget class="QLineEdit" name="lineEdit_audio_psk_value"/>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_audio_psk_read">
            <property name="text">
-            <string>关盒</string>
+            <string>读取</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_25">
+          <widget class="QPushButton" name="pushButton_aduio_psk_write">
            <property name="text">
-            <string>出盒</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_26">
-           <property name="text">
-            <string>入盒</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_19">
-           <property name="text">
-            <string>入耳</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_20">
-           <property name="text">
-            <string>出耳</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_22">
-           <property name="text">
-            <string>pydbg</string>
+            <string>写入</string>
            </property>
           </widget>
          </item>
         </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_8">
-         <item>
-          <widget class="QLabel" name="label_9">
-           <property name="text">
-            <string>连接手机</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_11">
-           <property name="text">
-            <string>对耳连接</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_12">
-           <property name="text">
-            <string>主副role</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_13">
-           <property name="text">
-            <string>HFP状态</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_14">
-           <property name="text">
-            <string>A2DP状态</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_15">
-           <property name="text">
-            <string>phy状态</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_27">
-           <property name="text">
-            <string>获取状态</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_7">
-         <item>
-          <widget class="QLabel" name="label_10">
-           <property name="text">
-            <string>打开：</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="lineEdit_6"/>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_6">
-           <property name="text">
-            <string>擦除</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_9">
-           <property name="text">
-            <string>烧录</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_10">
-           <property name="text">
-            <string>读取info</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_12">
-           <property name="text">
-            <string>重启</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <widget class="QProgressBar" name="progressBar_2">
-         <property name="value">
-          <number>0</number>
-         </property>
-        </widget>
        </item>
       </layout>
      </widget>
@@ -519,18 +367,6 @@
      <height>23</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menu1">
-    <property name="title">
-     <string>文件</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="menu">
-    <property name="title">
-     <string>驱动</string>
-    </property>
-   </widget>
-   <addaction name="menu1"/>
-   <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
