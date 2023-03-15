@@ -238,33 +238,33 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_12">
          <item>
-          <widget class="QLabel" name="label_22">
+          <widget class="QLineEdit" name="lineEdit_select_xuv_file"/>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_select_xuv_file">
            <property name="text">
-            <string>打开：</string>
+            <string>选择文件</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_7"/>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_7">
+          <widget class="QPushButton" name="pushButton_erase">
            <property name="text">
             <string>擦除</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_11">
+          <widget class="QPushButton" name="pushButton_burn">
            <property name="text">
             <string>烧录</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_13">
+          <widget class="QPushButton" name="pushButton_verify">
            <property name="text">
-            <string>读取info</string>
+            <string>Verify</string>
            </property>
           </widget>
          </item>
@@ -278,7 +278,7 @@
         </layout>
        </item>
        <item>
-        <widget class="QProgressBar" name="progressBar_1">
+        <widget class="QProgressBar" name="progressBar_burn">
          <property name="value">
           <number>0</number>
          </property>

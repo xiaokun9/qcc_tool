@@ -1,8 +1,12 @@
 # 先导入生成的Ui界面模块
-from PyQt5.QtWidgets import QMainWindow, QAction,QLabel
+import time
 
+from PyQt5.QtWidgets import QMainWindow, QAction, QLabel, QFileDialog
+
+from operaFlashThread import opera_flash_Thread
 from qcc_ui import Ui_MainWindow
 from TestEngineAPI import TestEngine
+from TestFlashAPI import TestFlash
 import os,sys,re
 
 
@@ -14,11 +18,14 @@ class ChildUiClass(QMainWindow, Ui_MainWindow):
         _DIRNAME = os.path.dirname(os.path.abspath(sys.modules['__main__'].__file__))
         exe_path = os.path.join(_DIRNAME, "x86", "TestEngine.dll")
         self.myDll = TestEngine(exe_path)
+        exe_path = os.path.join(_DIRNAME, "x86", "TestFlash.dll")
+        self.FlashDll = TestFlash(exe_path)
         retval, versionStr = self.myDll.teGetVersion()
         #self.statusBar.showMessage("DLL version:"+versionStr)
 
         #trans_list = trans.split(',')
         self.port_info = {}
+        self.tran_port = {}
         self.cur_port1 = None
         #self.cur_port2 = None
         self.handle1 = None
@@ -44,6 +51,14 @@ class ChildUiClass(QMainWindow, Ui_MainWindow):
         self.pushButton_app_psk_write.clicked.connect(self.app_psk_write_func)
         self.pushButton_audio_psk_read.clicked.connect(self.audio_psk_read_func)
         self.pushButton_aduio_psk_write.clicked.connect(self.audio_psk_write_func)
+        self.pushButton_erase.clicked.connect(self.eara_pushbutton_click)
+        self.pushButton_burn.clicked.connect(self.burn_pushbutton_click)
+        self.thread = opera_flash_Thread()
+        self.thread.signal_erase_finished.connect(self.erase_thread_signal_handler)
+        self.thread.signal_burn_process.connect(self.burn_process_signal_handler)
+        self.thread.signal_burn_finished.connect(self.burn_finish_signal_handler)
+        self.pushButton_select_xuv_file.clicked.connect(self.select_xuv_file)
+        self.pushButton_verify.clicked.connect(self.flash_verify_handler)
         #self.menu_2.triggered.connect(self.refresh_port)
         #self.menu_2.menuAction().triggered.connect(self.refresh_port)
         #add action
@@ -76,12 +91,19 @@ class ChildUiClass(QMainWindow, Ui_MainWindow):
     def refresh_port(self,checked):
         #print(self.sender().text())
         #print(checked)
+        self.port_info.clear()
+        self.tran_port.clear()
         self.comboBox_1.clear()
         #self.comboBox_2.clear()
         retval, maxLen, ports, trans, count = self.myDll.teGetAvailableDebugPorts(256)
+        #print(ports)
+        #print(trans)
+        trans_list = trans.split(',')
         ports_list = ports.split(',')
         for index in range(count):
             self.port_info[ports_list[index]] = ports_list[index].replace(' ', '').replace('(', '').replace(')', '')
+            #self.tran_port.append(int(trans_list[index][-1:]))
+            self.tran_port[ports_list[index]] = trans_list[index]
             self.comboBox_1.addItem(ports_list[index])
             #self.comboBox_2.addItem(ports_list[index])
             if index == 0:
@@ -102,6 +124,11 @@ class ChildUiClass(QMainWindow, Ui_MainWindow):
             #self.port_info[ports_list[index]] = trans_list[index]
             #print(ports_list[index].replace(' ','').replace('(','').replace(')',''))
         self.statusBar_label.setText('<font color="blue">端口刷新完成</font>')
+        #print(self.port_info)
+        #print(self.tran_port)
+        #print(self.cur_port1)
+        retval, name = self.myDll.teGetChipDisplayName(self.handle1, maxLen=20)
+        self.statusBar_label_permanent.setText('<font color="red">Chip:{str}</font>'.format(str=name))
     def refresh_app_psk(self, checked):
         #print("refresh_app_psk")
         self.app_psk_id.clear()
@@ -151,6 +178,8 @@ class ChildUiClass(QMainWindow, Ui_MainWindow):
         parm2 = port_device[6:]
         self.handle1 = self.myDll.openTestEngine(parm1,parm2,self.port_dataRate,self.port_retryTimeOut,self.port_usbTimeout)
         #print(self.handle1)
+        retval, name = self.myDll.teGetChipDisplayName(self.handle1, maxLen=20)
+        self.statusBar_label_permanent.setText('<font color="red">Chip:{str}</font>'.format(str=name))
         if self.handle1 == self.myDll.TE_INVALID_HANDLE_VALUE:
             #print("port1_open fail ")
             #self.statusBar.showMessage(self.cur_port1 + " open fail,handle:" + str(self.handle1))
@@ -336,9 +365,59 @@ class ChildUiClass(QMainWindow, Ui_MainWindow):
             self.statusBar_label.setText('<font color="red">audio psk id write Fail</font>')
         else:
             self.statusBar_label.setText('<font color="blue">audio psk id write Succeed</font>')
-
-
-
+    def select_xuv_file(self):
+        #print('select_xuv_file')
+        fname, _ = QFileDialog.getOpenFileName(self, "选择xuv文件", '.', 'xuv文件(*.xuv)')
+        self.lineEdit_select_xuv_file.setText(fname)
+        #print(fname)
+    def erase_thread_signal_handler(self,res):
+        #print('erase_thread_signal_handler')
+        if res == True:
+            self.statusBar_label.setText('<font color="blue">擦除成功！！！ </font>')
+        else:
+            self.statusBar_label.setText('<font color="red">擦除失败，请重试！！！</font>')
+        self.pushButton_erase.setEnabled(True)
+    def eara_pushbutton_click(self):
+        #擦除单个设备
+        self.pushButton_erase.setEnabled(False)
+        port_device = self.port_info[self.cur_port1]
+        parm1 = None
+        if port_device[:6] == 'USBDBG':
+            parm1 = self.FlashDll.TFL_USBDBG
+        elif port_device[:6] == 'USBTRB':
+            parm1 = self.FlashDll.TFL_TRB
+        # parm 2
+        parm2 = port_device[6:]
+        self.thread.Erase_flash_set_info(self.FlashDll, int(parm2), parm1,self.thread.opera_erase_flsh)
+        self.thread.start()
+    def burn_pushbutton_click(self):
+        file_name = self.lineEdit_select_xuv_file.text()
+        if file_name == '':
+            return
+        self.pushButton_burn.setEnabled(False)
+        self.progressBar_burn.setValue(0)
+        port_device = self.port_info[self.cur_port1]
+        parm1 = None
+        if port_device[:6] == 'USBDBG':
+            parm1 = self.FlashDll.TFL_USBDBG
+        elif port_device[:6] == 'USBTRB':
+            parm1 = self.FlashDll.TFL_TRB
+        # parm 2
+        parm2 = port_device[6:]
+        self.thread.Burn_flash_set_info(flashDll=self.FlashDll, port=int(parm2), transport=parm1, op=self.thread.opera_burn_flsh,fileName=file_name)
+        self.thread.start()
+    def burn_process_signal_handler(self,process:int):
+        print(process)
+        self.progressBar_burn.setValue(process)
+    def burn_finish_signal_handler(self,res:bool):
+        self.pushButton_burn.setEnabled(True)
+        if res == True:
+            self.statusBar_label.setText('<font color="blue">烧录成功！！！ </font>')
+        else:
+            self.statusBar_label.setText('<font color="red">烧录失败，请重试！！！</font>')
+        #print("burn_finish_signal_handler:" + str(res))
+    def flash_verify_handler(self):
+        pass
 
 
 # 在main函数中调用
