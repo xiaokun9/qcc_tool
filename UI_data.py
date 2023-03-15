@@ -1,8 +1,11 @@
 # 先导入生成的Ui界面模块
-from PyQt5.QtWidgets import QMainWindow, QAction,QLabel
+import time
+
+from PyQt5.QtWidgets import QMainWindow, QAction, QLabel, QFileDialog
 
 from qcc_ui import Ui_MainWindow
 from TestEngineAPI import TestEngine
+from TestFlashAPI import TestFlash
 import os,sys,re
 
 
@@ -14,11 +17,14 @@ class ChildUiClass(QMainWindow, Ui_MainWindow):
         _DIRNAME = os.path.dirname(os.path.abspath(sys.modules['__main__'].__file__))
         exe_path = os.path.join(_DIRNAME, "x86", "TestEngine.dll")
         self.myDll = TestEngine(exe_path)
+        exe_path = os.path.join(_DIRNAME, "x86", "TestFlash.dll")
+        self.FlashDll = TestFlash(exe_path)
         retval, versionStr = self.myDll.teGetVersion()
         #self.statusBar.showMessage("DLL version:"+versionStr)
 
         #trans_list = trans.split(',')
         self.port_info = {}
+        self.tran_port = {}
         self.cur_port1 = None
         #self.cur_port2 = None
         self.handle1 = None
@@ -44,6 +50,8 @@ class ChildUiClass(QMainWindow, Ui_MainWindow):
         self.pushButton_app_psk_write.clicked.connect(self.app_psk_write_func)
         self.pushButton_audio_psk_read.clicked.connect(self.audio_psk_read_func)
         self.pushButton_aduio_psk_write.clicked.connect(self.audio_psk_write_func)
+        self.pushButton_erase.clicked.connect(self.eara_pushbutton_click)
+        self.pushButton_select_xuv_file.clicked.connect(self.select_xuv_file)
         #self.menu_2.triggered.connect(self.refresh_port)
         #self.menu_2.menuAction().triggered.connect(self.refresh_port)
         #add action
@@ -76,12 +84,19 @@ class ChildUiClass(QMainWindow, Ui_MainWindow):
     def refresh_port(self,checked):
         #print(self.sender().text())
         #print(checked)
+        self.port_info.clear()
+        self.tran_port.clear()
         self.comboBox_1.clear()
         #self.comboBox_2.clear()
         retval, maxLen, ports, trans, count = self.myDll.teGetAvailableDebugPorts(256)
+        #print(ports)
+        #print(trans)
+        trans_list = trans.split(',')
         ports_list = ports.split(',')
         for index in range(count):
             self.port_info[ports_list[index]] = ports_list[index].replace(' ', '').replace('(', '').replace(')', '')
+            #self.tran_port.append(int(trans_list[index][-1:]))
+            self.tran_port[ports_list[index]] = trans_list[index]
             self.comboBox_1.addItem(ports_list[index])
             #self.comboBox_2.addItem(ports_list[index])
             if index == 0:
@@ -336,6 +351,63 @@ class ChildUiClass(QMainWindow, Ui_MainWindow):
             self.statusBar_label.setText('<font color="red">audio psk id write Fail</font>')
         else:
             self.statusBar_label.setText('<font color="blue">audio psk id write Succeed</font>')
+    def select_xuv_file(self):
+        #print('select_xuv_file')
+        fname, _ = QFileDialog.getOpenFileName(self, "选择xuv文件", '.', 'xuv文件(*.xuv)')
+        self.lineEdit_select_xuv_file.setText(fname)
+        #print(fname)
+    def eara_pushbutton_click(self):
+        #擦除单个设备用下面注释中得方法
+        """
+            retval = myDll.flOpen(port=104, xtal=26, delays=0, transport=4)
+            if retval != myDll.TFL_OK:
+                print("flOpen fail")
+            retval = myDll.flSetFlashType(type=2)
+            print(retval)
+            retval = myDll.flSetSubsysChipSel(subSys=4, chipSel=0)
+            print(retval)
+            retval = myDll.flErase()
+            print(retval)
+            """
+        #下面的方法同时擦除多个设备的方法,但是代码逻辑只擦除一个设备
+        port_info = self.tran_port[self.cur_port1]
+        print(port_info)
+        retval, transOut, device = self.FlashDll.flmConvertPort(transIn=port_info)
+        if retval != self.FlashDll.TFL_OK:
+            self.statusBar_label.setText('<font color="red">flmConvertPort fail</font>')
+            return
+        device_mask = int(port_info[-1:])
+        retval = self.FlashDll.flmOpenTrans(deviceMask=device_mask, trans=transOut, xtal=26)#26M
+        if retval != self.FlashDll.TFL_OK:
+            self.statusBar_label.setText('<font color="red">flmOpenTrans fail</font>')
+            return
+        retval = self.FlashDll.flmSetFlashType(deviceMask=device_mask, type=self.FlashDll.TFL_TYPE_SQIF)
+        if retval != self.FlashDll.TFL_OK:
+            self.statusBar_label.setText('<font color="red">flmSetFlashType fail</font>')
+            return
+        retval = self.FlashDll.flmSetSubsysChipSel(deviceMask=device_mask, subSys=4, chipSel=0)#4 = Application
+        if retval != self.FlashDll.TFL_OK:
+            self.statusBar_label.setText('<font color="red">flmSetSubsysChipSel fail</font>')
+            return
+        retval = self.FlashDll.flmEraseSpawn(deviceMask=device_mask)
+        if retval != self.FlashDll.TFL_OK:
+            self.statusBar_label.setText('<font color="red">flmSetSubsysChipSel fail</font>')
+            return
+        while True:
+            retval = self.FlashDll.flmGetDeviceProgress(device=0)
+            if retval == 100:
+                self.statusBar_label.setText('<font color="blue">flmGetDeviceProgress succeed</font>')
+                break
+            else:
+                self.statusBar_label.setText('<font color="red">flmGetDeviceProgress fail</font>')
+            time.sleep(1)
+        retval = self.FlashDll.flmGetLastError()
+        if retval == self.FlashDll.TFL_OK:
+            self.statusBar_label.setText('<font color="blue">擦除成功！！！ </font>')
+        else:
+            self.statusBar_label.setText('<font color="blue">擦除失败，请重试，错误码：{nu}</font>'.format(nu=retval))
+        # flmGetLastError/flmGetBitErrorField/flmClose
+        self.FlashDll.flmClose(device_mask)
 
 
 
