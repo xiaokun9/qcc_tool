@@ -46,6 +46,12 @@
              <height>20</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>端口列表</string>
+           </property>
+           <property name="statusTip">
+            <string>端口列表</string>
+           </property>
           </widget>
          </item>
          <item>
@@ -56,7 +62,17 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_1_BD_addr"/>
+          <widget class="QLineEdit" name="lineEdit_1_BD_addr">
+           <property name="toolTip">
+            <string>蓝牙地址</string>
+           </property>
+           <property name="statusTip">
+            <string>蓝牙地址</string>
+           </property>
+           <property name="whatsThis">
+            <string/>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QLabel" name="label_7">
@@ -66,10 +82,26 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_1_name"/>
+          <widget class="QLineEdit" name="lineEdit_1_name">
+           <property name="toolTip">
+            <string>蓝牙名称</string>
+           </property>
+           <property name="statusTip">
+            <string>蓝牙名称</string>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QPushButton" name="pushButton_1_read">
+           <property name="toolTip">
+            <string>读取地址、名称</string>
+           </property>
+           <property name="statusTip">
+            <string>读取地址、名称</string>
+           </property>
+           <property name="whatsThis">
+            <string/>
+           </property>
            <property name="text">
             <string>读取</string>
            </property>
@@ -77,6 +109,12 @@
          </item>
          <item>
           <widget class="QPushButton" name="pushButton_1_write">
+           <property name="toolTip">
+            <string>写入地址、名称</string>
+           </property>
+           <property name="statusTip">
+            <string>写入地址、名称</string>
+           </property>
            <property name="text">
             <string>写入</string>
            </property>
@@ -263,13 +301,32 @@
              <height>20</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>APP psk 列表</string>
+           </property>
+           <property name="statusTip">
+            <string>APP psk 列表</string>
+           </property>
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_app_psk_value"/>
+          <widget class="QLineEdit" name="lineEdit_app_psk_value">
+           <property name="toolTip">
+            <string>psk value</string>
+           </property>
+           <property name="statusTip">
+            <string>psk value</string>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QPushButton" name="pushButton_app_psk_read">
+           <property name="toolTip">
+            <string>读取psk 值</string>
+           </property>
+           <property name="statusTip">
+            <string>读取psk 值</string>
+           </property>
            <property name="text">
             <string>读取</string>
            </property>
@@ -277,6 +334,12 @@
          </item>
          <item>
           <widget class="QPushButton" name="pushButton_app_psk_write">
+           <property name="toolTip">
+            <string>注意，为空时，为删除psk键值</string>
+           </property>
+           <property name="statusTip">
+            <string>注意，为空时，为删除psk键值</string>
+           </property>
            <property name="text">
             <string>写入</string>
            </property>
@@ -301,13 +364,32 @@
              <height>20</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>audio psk 列表</string>
+           </property>
+           <property name="statusTip">
+            <string>audio psk 列表</string>
+           </property>
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_audio_psk_value"/>
+          <widget class="QLineEdit" name="lineEdit_audio_psk_value">
+           <property name="toolTip">
+            <string>读取psk 值</string>
+           </property>
+           <property name="statusTip">
+            <string>读取psk 值</string>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QPushButton" name="pushButton_audio_psk_read">
+           <property name="toolTip">
+            <string>读取psk 值</string>
+           </property>
+           <property name="statusTip">
+            <string>读取psk 值</string>
+           </property>
            <property name="text">
             <string>读取</string>
            </property>
@@ -315,6 +397,12 @@
          </item>
          <item>
           <widget class="QPushButton" name="pushButton_aduio_psk_write">
+           <property name="toolTip">
+            <string>注意，为空时，为删除psk键值</string>
+           </property>
+           <property name="statusTip">
+            <string>注意，为空时，为删除psk键值</string>
+           </property>
            <property name="text">
             <string>写入</string>
            </property>
