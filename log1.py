@@ -38,7 +38,7 @@ device_options = [
         'indent' : 4,
         'log': {'apps1'},
         'device_url' : 'trb:usb2trb:193663',
-        'firmware_builds' : r'apps1:C:\Users\cx\Desktop\qcc\qcc_tool\earbud.elf',
+        'firmware_builds' : r'apps1:C:\Users\cx\Desktop\qcc\earbud.elf',
         'target' : None,
         'preload' : True
     },
