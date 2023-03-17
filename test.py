@@ -5,8 +5,10 @@ import ctypes
 from TestEngineAPI import TestEngine
 from PyQt5 import QtWidgets
 from TestFlashAPI import TestFlash
+
 from operaFlashThread import opera_flash_Thread
 from  csr.front_end.pydbg_front_end import PydbgFrontEndBase
+
 
 import time
 import re
@@ -15,9 +17,25 @@ KEY_DEVICE_NAME = "app5:DeviceName"
 TTT = "audio:0x205C80"
 
 if __name__ == '__main__':
+    # _DIRNAME = os.path.dirname(os.path.abspath(sys.modules['__main__'].__file__))
+    # exe_path = os.path.join(_DIRNAME, "x86", "TestEngine.dll")
+    # #_dll = ctypes.windll.LoadLibrary(exe_path)
+    # myDll = TestEngine(exe_path)
+    # handle = myDll.openTestEngine(myDll.USBDBG, '104', 0, 5000, 1000)
+    # ports = 'USB TRB(193555), USB TRB(193663), USBDBG(104), USBDBG(105)'
+    # trans = 'SPITRANS=TRB SPIPORT=1,SPITRANS=TRB SPIPORT=2,SPITRANS=USBDBG SPIPORT=1,SPITRANS=USBDBG SPIPORT=2'
+    # count = 4
+    # ss = trans.split(',')
+    # tran_port = []
+    # print(ss)
+    # for index in range(count):
+    #     tran_port.append(int(ss[index][-1:]))
+    # print(tran_port)
+
     _DIRNAME = os.path.dirname(os.path.abspath(sys.modules['__main__'].__file__))
-    exe_path = os.path.join(_DIRNAME, "x86", "TestEngine.dll")
+    exe_path = os.path.join(_DIRNAME, "x86", "TestFlash.dll")
     #_dll = ctypes.windll.LoadLibrary(exe_path)
+
     myDll = TestEngine(exe_path)
     handle = myDll.openTestEngine(myDll.USBDBG, '104', 0, 5000, 1000)
     retval, name = myDll.teGetChipDisplayName(handle, maxLen=20)
@@ -68,6 +86,7 @@ if __name__ == '__main__':
     print(retval)
     #flmGetLastError/flmGetBitErrorField/flmClose
     """
+
     # retval = myDll.flOpen(port=105, xtal=26, delays=0, transport=myDll.TFL_USBDBG)
     # if retval != myDll.TFL_OK:
     #     print("flOpen fail")

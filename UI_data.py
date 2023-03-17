@@ -52,6 +52,7 @@ class ChildUiClass(QMainWindow, Ui_MainWindow):
         self.pushButton_audio_psk_read.clicked.connect(self.audio_psk_read_func)
         self.pushButton_aduio_psk_write.clicked.connect(self.audio_psk_write_func)
         self.pushButton_erase.clicked.connect(self.eara_pushbutton_click)
+
         self.pushButton_burn.clicked.connect(self.burn_pushbutton_click)
         self.thread = opera_flash_Thread()
         self.thread.signal_erase_finished.connect(self.erase_thread_signal_handler)
@@ -59,6 +60,7 @@ class ChildUiClass(QMainWindow, Ui_MainWindow):
         self.thread.signal_burn_finished.connect(self.burn_finish_signal_handler)
         self.pushButton_select_xuv_file.clicked.connect(self.select_xuv_file)
         self.pushButton_verify.clicked.connect(self.flash_verify_handler)
+
         #self.menu_2.triggered.connect(self.refresh_port)
         #self.menu_2.menuAction().triggered.connect(self.refresh_port)
         #add action
@@ -370,6 +372,7 @@ class ChildUiClass(QMainWindow, Ui_MainWindow):
         fname, _ = QFileDialog.getOpenFileName(self, "选择xuv文件", '.', 'xuv文件(*.xuv)')
         self.lineEdit_select_xuv_file.setText(fname)
         #print(fname)
+
     def erase_thread_signal_handler(self,res):
         #print('erase_thread_signal_handler')
         if res == True:
@@ -418,6 +421,7 @@ class ChildUiClass(QMainWindow, Ui_MainWindow):
         #print("burn_finish_signal_handler:" + str(res))
     def flash_verify_handler(self):
         pass
+
 
 
 # 在main函数中调用
