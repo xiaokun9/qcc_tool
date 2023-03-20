@@ -3,11 +3,13 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/python-3.11.1-embed-win32" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/python-3.9.0-embed-win32" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/venv_11win32" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
+      <excludeFolder url="file://$MODULE_DIR$/venv_py2" />
+      <excludeFolder url="file://$MODULE_DIR$/venv_pyinstaller" />
+      <excludeFolder url="file://$MODULE_DIR$/venv_64" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.9 (qcc_tool)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.7 (qcc_tool)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PyDocumentationSettings">

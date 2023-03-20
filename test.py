@@ -2,12 +2,16 @@ import os
 import sys
 import ctypes
 #from TestEngineAPI import TestEngine
-from TestEngineAPI import TestEngine
-from PyQt5 import QtWidgets
-from TestFlashAPI import TestFlash
+#from TestEngineAPI import TestEngine
 
-from operaFlashThread import opera_flash_Thread
-from  csr.front_end.pydbg_front_end import PydbgFrontEndBase
+import subprocess
+#from PyQt5.QtCore import QProcess
+
+#from PyQt5 import QtWidgets
+#from TestFlashAPI import TestFlash
+
+#from operaFlashThread import opera_flash_Thread
+#from  csr.front_end.pydbg_front_end import PydbgFrontEndBase
 
 
 import time
@@ -16,7 +20,16 @@ KEY_BD_ADDRESS = "bt2:BD_ADDRESS"
 KEY_DEVICE_NAME = "app5:DeviceName"
 TTT = "audio:0x205C80"
 
+
+
 if __name__ == '__main__':
+    #sbp=subprocess.call('dir',shell=True)
+    #print(sbp)
+    child = subprocess.Popen([r'.\python27\python', 'log1.py'],shell=True,stdout=subprocess.PIPE)
+
+    while True:
+        time.sleep(1)
+        print(str(child.stdout.readline()))
     # _DIRNAME = os.path.dirname(os.path.abspath(sys.modules['__main__'].__file__))
     # exe_path = os.path.join(_DIRNAME, "x86", "TestEngine.dll")
     # #_dll = ctypes.windll.LoadLibrary(exe_path)
@@ -31,15 +44,15 @@ if __name__ == '__main__':
     # for index in range(count):
     #     tran_port.append(int(ss[index][-1:]))
     # print(tran_port)
-
-    _DIRNAME = os.path.dirname(os.path.abspath(sys.modules['__main__'].__file__))
-    exe_path = os.path.join(_DIRNAME, "x86", "TestFlash.dll")
-    #_dll = ctypes.windll.LoadLibrary(exe_path)
-
-    myDll = TestEngine(exe_path)
-    handle = myDll.openTestEngine(myDll.USBDBG, '104', 0, 5000, 1000)
-    retval, name = myDll.teGetChipDisplayName(handle, maxLen=20)
-    print(retval, name)
+    #
+    # _DIRNAME = os.path.dirname(os.path.abspath(sys.modules['__main__'].__file__))
+    # exe_path = os.path.join(_DIRNAME, "x86", "TestFlash.dll")
+    # #_dll = ctypes.windll.LoadLibrary(exe_path)
+    #
+    # myDll = TestEngine(exe_path)
+    # handle = myDll.openTestEngine(myDll.USBDBG, '104', 0, 5000, 1000)
+    # retval, name = myDll.teGetChipDisplayName(handle, maxLen=20)
+    # print(retval, name)
 
     # retval, buildId = myDll.bccmdGetBuildId(handle)
     # print(retval, buildId)
@@ -102,7 +115,7 @@ if __name__ == '__main__':
     # print(retval)
     # retval = myFlashDll.flmEraseSpawn(1)
     # print(retval)
-    # if retval == 0:#擦除线程启动成功
+    # if retval == 0:#
     #     retval = myFlashDll.flmGetDeviceError(1)
     #     print(retval)
     #     print("123")

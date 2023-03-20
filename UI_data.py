@@ -7,7 +7,7 @@ from operaFlashThread import opera_flash_Thread
 from qcc_ui import Ui_MainWindow
 from TestEngineAPI import TestEngine
 from TestFlashAPI import TestFlash
-import os,sys,re
+import os,sys,re,subprocess
 
 
 # 继承
@@ -16,9 +16,9 @@ class ChildUiClass(QMainWindow, Ui_MainWindow):
         super(ChildUiClass, self).__init__(parent=parent)
         self.setupUi(self)
         _DIRNAME = os.path.dirname(os.path.abspath(sys.modules['__main__'].__file__))
-        exe_path = os.path.join(_DIRNAME, "x86", "TestEngine.dll")
+        exe_path = os.path.join(_DIRNAME, "x86","x64", "TestEngine.dll")
         self.myDll = TestEngine(exe_path)
-        exe_path = os.path.join(_DIRNAME, "x86", "TestFlash.dll")
+        exe_path = os.path.join(_DIRNAME, "x86","x64", "TestFlash.dll")
         self.FlashDll = TestFlash(exe_path)
         retval, versionStr = self.myDll.teGetVersion()
         #self.statusBar.showMessage("DLL version:"+versionStr)
@@ -420,8 +420,11 @@ class ChildUiClass(QMainWindow, Ui_MainWindow):
             self.statusBar_label.setText('<font color="red">烧录失败，请重试！！！</font>')
         #print("burn_finish_signal_handler:" + str(res))
     def flash_verify_handler(self):
-        pass
-
+        child = subprocess.Popen([r'.\python27\python', 'log1.py'],shell=True,stdout=subprocess.PIPE)
+        while True:
+            time.sleep(1)
+            #print(str(child.stdout.readline()))
+            self.textBrowser.setText(child.stdout.readline())
 
 
 # 在main函数中调用
