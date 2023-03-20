@@ -125,49 +125,67 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_10">
          <item>
-          <widget class="QCheckBox" name="checkBox_4">
+          <widget class="QCheckBox" name="checkBox_live_log">
            <property name="text">
             <string>live log</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_15">
+          <widget class="QPushButton" name="pushButton_open_case">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>开盒</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_21">
+          <widget class="QPushButton" name="pushButton_close_case">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>关盒</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_28">
+          <widget class="QPushButton" name="pushButton_out_of_case">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>出盒</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_29">
+          <widget class="QPushButton" name="pushButton_in_case">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>入盒</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_23">
+          <widget class="QPushButton" name="pushButton_in_ear">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>入耳</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_24">
+          <widget class="QPushButton" name="pushButton_out_of_ear">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>出耳</string>
            </property>
@@ -175,6 +193,9 @@
          </item>
          <item>
           <widget class="QPushButton" name="pushButton_30">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>pydbg</string>
            </property>
@@ -227,7 +248,10 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_31">
+          <widget class="QPushButton" name="pushButton_phy_state">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
            <property name="text">
             <string>获取状态</string>
            </property>
@@ -416,14 +440,14 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
-       <widget class="QCheckBox" name="checkBox_3">
-        <property name="text">
-         <string>保存log</string>
-        </property>
-       </widget>
+       <widget class="QLineEdit" name="lineEdit_elf_file"/>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit"/>
+       <widget class="QPushButton" name="pushButton_elf_file">
+        <property name="text">
+         <string>ELF文件</string>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QCheckBox" name="checkBox">
@@ -438,11 +462,7 @@
      </layout>
     </item>
     <item>
-     <widget class="QTextBrowser" name="textBrowser">
-      <property name="placeholderText">
-       <string/>
-      </property>
-     </widget>
+     <widget class="QTextEdit" name="textEdit"/>
     </item>
    </layout>
   </widget>

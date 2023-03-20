@@ -1,9 +1,13 @@
 # 先导入生成的Ui界面模块
 import time
 
+import PyQt5.QtCore
 from PyQt5.QtWidgets import QMainWindow, QAction, QLabel, QFileDialog
+from PyQt5.QtCore import Qt
 
+from live_log_Thread import live_log_Thread
 from operaFlashThread import opera_flash_Thread
+from py_dbg import py_dbg
 from qcc_ui import Ui_MainWindow
 from TestEngineAPI import TestEngine
 from TestFlashAPI import TestFlash
@@ -61,6 +65,10 @@ class ChildUiClass(QMainWindow, Ui_MainWindow):
         self.pushButton_select_xuv_file.clicked.connect(self.select_xuv_file)
         self.pushButton_verify.clicked.connect(self.flash_verify_handler)
 
+        self.checkBox_live_log.stateChanged.connect(self.live_log_stateChanged)
+        self.live_thread = live_log_Thread()
+        self.checkBox_live_log.setEnabled(False)
+        self.pushButton_elf_file.clicked.connect(self.button_elf_file)
         #self.menu_2.triggered.connect(self.refresh_port)
         #self.menu_2.menuAction().triggered.connect(self.refresh_port)
         #add action
@@ -89,6 +97,10 @@ class ChildUiClass(QMainWindow, Ui_MainWindow):
         self.refresh_audio_psk_action.setText('读取audio psk')
         self.menubar.addAction(self.refresh_audio_psk_action)
         self.refresh_audio_psk_action.setStatusTip('读取audio psk')
+
+        #phy state
+        self.pushButton_phy_state.clicked.connect(self.pushButton_phy_state_handle)
+        self.phy_thread = py_dbg()
 
     def refresh_port(self,checked):
         #print(self.sender().text())
@@ -120,6 +132,7 @@ class ChildUiClass(QMainWindow, Ui_MainWindow):
                 parm2 = port_device[6:]
                 self.handle1 = self.myDll.openTestEngine(parm1, parm2, self.port_dataRate, self.port_retryTimeOut,
                                                          self.port_usbTimeout)
+                self.check_live_log_box()
             elif index == 1:
                 #self.cur_port2 = ports_list[index]
                 pass
@@ -129,6 +142,7 @@ class ChildUiClass(QMainWindow, Ui_MainWindow):
         #print(self.port_info)
         #print(self.tran_port)
         #print(self.cur_port1)
+
         retval, name = self.myDll.teGetChipDisplayName(self.handle1, maxLen=20)
         self.statusBar_label_permanent.setText('<font color="red">Chip:{str}</font>'.format(str=name))
     def refresh_app_psk(self, checked):
@@ -186,6 +200,7 @@ class ChildUiClass(QMainWindow, Ui_MainWindow):
             #print("port1_open fail ")
             #self.statusBar.showMessage(self.cur_port1 + " open fail,handle:" + str(self.handle1))
             self.statusBar_label.setText('<font color="red">{port}open fail,handle:{hand}</font>'.format(port=self.cur_port1,hand=self.handle1))
+            return
             #print(port_device + " open fail,handle:"+ self.handle1)
             #self.textBrowser.setText(port_device + " open fail,handle:" + str(self.handle1))
         else:
@@ -194,6 +209,7 @@ class ChildUiClass(QMainWindow, Ui_MainWindow):
             self.statusBar_label.setText('<font color="blue">{port}open succeed,handle:{hand}</font>'.format(port=self.cur_port1,hand=self.handle1))
             #print(port_device + " open succeed,handle:"+ self.handle1)
             #self.textBrowser.setText(port_device + " open succeed,handle:" + str(self.handle1))
+        self.check_live_log_box()
 
     def port_read_addr_name_1(self):
         if self.handle1 == self.myDll.TE_INVALID_HANDLE_VALUE or self.handle1 == None:
@@ -426,13 +442,37 @@ class ChildUiClass(QMainWindow, Ui_MainWindow):
             #print(str(child.stdout.readline()))
             self.textBrowser.setText(child.stdout.readline())
 
+    def live_log_stateChanged(self,state):
+        if state == Qt.Checked:#Checked
+            print('Checked')
+            port = self.port_info[self.cur_port1][-6:]
+            elf = self.lineEdit_elf_file.text()
+            self.live_thread.set_logger_init(port,elf)
+            self.live_thread.set_runing_flag(True)
+            self.live_thread.start()
+        elif state == Qt.Unchecked:#Unchecked
+            print('Unchecked')
+            self.live_thread.set_runing_flag(False)
+            self.live_thread.terminate()
+            self.live_thread.kill_thread()
+            #self.live_thread.quit()
+            #self.live_thread.kill_thread()
+    def button_elf_file(self):
+        fname, _ = QFileDialog.getOpenFileName(self, "选择ELF文件", '.', 'ELF文件(*.elf)')
+        self.lineEdit_elf_file.setText(fname)
+        self.check_live_log_box()
+    def check_live_log_box(self):
+        if self.cur_port1 ==None:
+            return
+        if self.port_info[self.cur_port1][3:6] == 'TRB':
+            self.pushButton_phy_state.setEnabled(True)
+        else:
+            return
+        if self.lineEdit_elf_file.text() =='':
+            return
+        self.checkBox_live_log.setEnabled(True)
 
-# 在main函数中调用
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    child_dlg = ChildUiClass()
-    # 例如下面这一行信号与槽的调用其他界面显示
-    # About_dlg = ABout()
-    # child_dlg .softversion.triggered.connect(About_dlg.show)
-    child_dlg.show()
-    sys.exit(app.exec_())
+    def pushButton_phy_state_handle(self):
+        self.phy_thread.py_dbg_init()
+        self.phy_thread.pydbg_set_op_type(1)
+        self.phy_thread.start()

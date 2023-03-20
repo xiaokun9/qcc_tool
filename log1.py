@@ -17,6 +17,8 @@ import bisect
 import atexit
 import os
 
+from PyQt5 import QtWidgets
+
 sys.path.append(r"../utils")
 
 from csr.front_end.pydbg_front_end import PydbgFrontEndBase
@@ -32,12 +34,12 @@ os.environ["PYDBG_FIRMWARE_LOOKUP_DISABLED"] = "TRUE"
 
 device_options = [
     {
-        'name' : "EB2",
+        'name' : "EB1",
         'name_color' : "brightblue",
         'default_color' : "brightgreen",
         'indent' : 4,
         'log': {'apps1'},
-        'device_url' : 'trb:usb2trb:193663',
+        'device_url' : 'trb:usb2trb:193661',
         'firmware_builds' : r'apps1:C:\Users\cx\Desktop\qcc\earbud.elf',
         'target' : None,
         'preload' : True
@@ -169,6 +171,11 @@ class EarbudsLogger(object):
         message = "\n{:s} : {:s}\n".format(time.ctime(),mess)
         sys.stdout.write(message)
         self._logfile.write(message)
+    def stop_log(self):
+        for eb in self.earbuds:
+            #eb.trb_log.start(core_nicknames='apps1')
+            eb.trb_log.stop(core_nicknames='apps1')
+            eb.log_started = True
 
     def log(self):
 
@@ -236,15 +243,14 @@ class EarbudsLogger(object):
             eb,log_entry,clean_log = self._log_list.pop(0)
             time = self._timestamp_list.pop(0)
             dt = eb.datetime + timedelta(microseconds = time / 10)
-            print(eb.name_color + eb.name +  eb.default_color + " " + str(dt) + (" " * eb.indent) + " " + log_entry)
+            #print(eb.name_color + eb.name +  eb.default_color + " " + str(dt) + (" " * eb.indent) + " " + log_entry)
             self._logfile.write(eb.name + " " + str(dt) + (" " * eb.indent) + " " + clean_log + "\n")
 
+# colorama.init(convert=True)
 
-colorama.init(convert=True)
-
-handle_arguments()
-
-logger = EarbudsLogger(device_options, not args.nolog)
+# handle_arguments()
+#
+# logger = EarbudsLogger(device_options, not args.nolog)
 #logger.add_highlight("appConManager\w+", "yellow")
 #logger.add_highlight("appAvrcp\w+", "green")
 #logger.add_highlight("appAvAvrcp\w+", "green")
@@ -270,23 +276,23 @@ logger = EarbudsLogger(device_options, not args.nolog)
 logging_restarts = 0
 last_restart = time.time()
 
-while True:
-    try:
-        logger.log()
-    # We get UnboundLocalError from a KeyboardInterrupt (within pydbg)
-    except UnboundLocalError as ule:
-        if "local variable '_wrapped'" in str(ule):
-            logger.log_message("Clean test exit (Keyboard)")
-            sys.exit(0)
-        raise
-    except (KeyboardInterrupt, SystemExit):
-        logger.log_message("Clean test exit")
-        sys.exit(0)
-    # Separate the exceptions. Developers may wish to change the raise to a pass
-    except Exception as e:
-        logger.log_message("Pydbg problem. "+str(type(e)))
-        raise
-    except:
-        logger.log_message("Dirty exit. Not an Exception ?")
-        raise
+# while True:
+#     try:
+#         logger.log()
+#     # We get UnboundLocalError from a KeyboardInterrupt (within pydbg)
+#     except UnboundLocalError as ule:
+#         if "local variable '_wrapped'" in str(ule):
+#             logger.log_message("Clean test exit (Keyboard)")
+#             sys.exit(0)
+#         raise
+#     except (KeyboardInterrupt, SystemExit):
+#         logger.log_message("Clean test exit")
+#         sys.exit(0)
+#     # Separate the exceptions. Developers may wish to change the raise to a pass
+#     except Exception as e:
+#         logger.log_message("Pydbg problem. "+str(type(e)))
+#         raise
+#     except:
+#         logger.log_message("Dirty exit. Not an Exception ?")
+#         raise
 
